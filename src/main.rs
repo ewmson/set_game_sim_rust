@@ -36,7 +36,9 @@ fn play_game(mut deck: Vec<SetCard>) -> usize{
         if !sets.is_empty(){
             let chosen_set = choose_set(&sets, &board);
             assert!(sets.contains(&chosen_set));
-            board.retain(|card| *card != chosen_set.0 && *card != chosen_set.1 && *card != chosen_set.2);
+            board.remove(&chosen_set.0);
+            board.remove(&chosen_set.1);
+            board.remove(&chosen_set.2);
         }
         if !deck.is_empty() {
             board.extend(deck.split_off(deck.len()-3));
@@ -71,7 +73,7 @@ fn generate_deck() -> Vec<SetCard>{
 }
 
 fn main() {
-    let max_games = 10000000;
+    let max_games = 100000;
     let leftover_cards = (1..max_games).into_par_iter().map(|_|{
         let mut deck = generate_deck();
         deck.shuffle(&mut thread_rng());
