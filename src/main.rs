@@ -7,7 +7,10 @@ use std::collections::HashSet;
 use std::convert::TryInto;
 use std::iter::FromIterator;
 use strum::IntoEnumIterator;
-use strum_macros::EnumIter; // etc.
+use strum_macros::EnumIter;
+#[macro_use]
+extern crate clap;
+use clap::{App, Arg};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 struct SetCard {
@@ -91,8 +94,20 @@ fn generate_deck() -> Vec<SetCard> {
 }
 
 fn main() {
-    let max_games = 100000;
-    let leftover_cards = (1..max_games).into_par_iter().map(|_| {
+    let matches = App::new("Set Choice Strategy Simulator")
+        .about("Simulates how often you find all sets in a set game.")
+        .arg(
+            Arg::with_name("iterations")
+                .short("i")
+                .long("iterations")
+                .help("Number of iterations to simulate")
+                .default_value("100000")
+                .takes_value(true),
+        )
+        .get_matches();
+    let max_games = value_t!(matches, "iterations", u32).unwrap_or_else(|e| e.exit());
+    println!("Running {} iterations", max_games);
+    let leftover_cards = (0..max_games).into_par_iter().map(|_| {
         let mut deck = generate_deck();
         deck.shuffle(&mut thread_rng());
         return play_game(deck);
