@@ -41,7 +41,7 @@ fn play_game(mut deck: Vec<SetCard>) -> usize {
             board.remove(&chosen_set.1);
             board.remove(&chosen_set.2);
         }
-        if !deck.is_empty() {
+        if !deck.is_empty() && (board.len() < 12 || sets.len() <= 1) {
             board.extend(deck.split_off(deck.len() - 3));
         }
     }
