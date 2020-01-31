@@ -52,6 +52,7 @@ fn find_sets(board: &HashSet<SetCard>) -> HashSet<(SetCard, SetCard, SetCard)>{
     board.iter().tuple_combinations().filter(|(one, two, three)| is_set(&one, &two, &three)).map(|(one,two,three)| (*one,*two,*three)).collect()
 }
 fn is_set(one: &SetCard, two: &SetCard, three: &SetCard) -> bool {
+    // yeah I know, we are not doing bitwise ops yet.
     satisfy_set(&one.color, &two.color, &three.color) && satisfy_set(&one.shading, &two.shading, &three.shading) &&
     satisfy_set(&one.shape, &two.shape, &three.shape) && satisfy_set(&one.number, &two.number, &three.number)
 }
